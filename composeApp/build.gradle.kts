@@ -77,11 +77,11 @@ kotlin {
 }
 
 android {
-    namespace = "dev.coinroutine.app"
+    namespace = "org.coinroutine.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "dev.coinroutine.app"
+        applicationId = "org.coinroutine.project"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
