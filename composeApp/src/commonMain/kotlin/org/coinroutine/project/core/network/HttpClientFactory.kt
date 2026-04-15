@@ -11,6 +11,7 @@ import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.coinroutine.project.AppConfig
 
 object HttpClientFactory {
     fun create(engine: HttpClientEngine) : HttpClient{
@@ -35,7 +36,7 @@ object HttpClientFactory {
             //the default request extension function to set default headers for every request
             defaultRequest {
                 headers{
-                    append("x-access-token", "lookingForTheApi-insertHereToken")
+                    append("x-access-token", AppConfig.coinrankingApiKey)
                 }
                 contentType(ContentType.Application.Json)
             }

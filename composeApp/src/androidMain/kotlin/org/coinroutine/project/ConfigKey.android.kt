@@ -1,5 +1,5 @@
 package org.coinroutine.project
 
 actual object AppConfig {
-    actual val apiKey: String = BuildConfig.COINRANKING_API_KEY
+    actual val coinrankingApiKey: String = BuildConfig.COINRANKING_API_KEY
 }
