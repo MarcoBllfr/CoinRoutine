@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 object HttpClientFactory {
     fun create(engine: HttpClientEngine) : HttpClient{
         return HttpClient(engine){
+            //This plugin automatically manages the serialization and deserialization of request and response body
             install(ContentNegotiation){
                 json(
                     json = Json{
@@ -22,11 +23,16 @@ object HttpClientFactory {
                     }
                 )
             }
+            //Second,install for HTTP timeouts.
+            //This plugin lets us specify timeouts for our requests.
             install(HttpTimeout){
                 socketTimeoutMillis= 20_000L
                 requestTimeoutMillis= 20_000L
             }
+            //used for caching
             install(HttpCache)
+
+            //the default request extension function to set default headers for every request
             defaultRequest {
                 headers{
                     append("x-access-token", "lookingForTheApi-insertHereToken")

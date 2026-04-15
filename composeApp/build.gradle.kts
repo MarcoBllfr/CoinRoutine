@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -78,13 +79,20 @@ kotlin {
 android {
     namespace = "org.coinroutine.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "org.coinroutine.project"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        val coinrankingKey = project.loadLocalProperty(
+            path = "local.properties",
+            propertyName = "COINRANKING_KEY" //private key name
+        )
+        buildConfigField("String", "COINRANKING_API_KEY", "\"$coinrankingKey\"")
     }
     packaging {
         resources {
@@ -109,5 +117,18 @@ room {
 dependencies {
     ksp(libs.room.compiler)
     debugImplementation(compose.uiTooling)
+}
+
+fun Project.loadLocalProperty(path: String, propertyName: String): String {
+    val props = Properties()
+    val propFile = project.rootProject.file(path)
+
+    if (propFile.exists()) {
+        propFile.inputStream().use { stream ->
+            props.load(stream)
+        }
+        return props.getProperty(propertyName) ?: ""
+    }
+    return ""
 }
 

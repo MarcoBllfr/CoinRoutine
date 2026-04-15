@@ -6,6 +6,6 @@ import org.coinroutine.project.theme.CoinRoutineTheme
 @Composable
 fun App() {
     CoinRoutineTheme{
-
+        println("LA_MIA_CHIAVE_DEBUG: ${AppConfig.apiKey}")
     }
 }
