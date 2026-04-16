@@ -1,0 +1,13 @@
+package org.coinroutine.project.coins.data.remote.dto
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CoinPriceHistoryResponseDto(
+    val history: List<CoinPriceDto>
+)
+@Serializable
+data class CoinPriceDto (
+    val price: Double?,
+    val timestamp: Long
+)
