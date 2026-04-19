@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.coinroutine.project.coins.domain.GetCoinsListUseCase
 import org.coinroutine.project.core.domain.Result
+import org.coinroutine.project.core.util.formatFiat
+import org.coinroutine.project.core.util.formatPercentage
 
 class CoinsListViewModel(
     private val getCoinsListUseCase: GetCoinsListUseCase
@@ -35,8 +37,8 @@ class CoinsListViewModel(
                            iconUrl = coinItem.coin.iconUrl,
                            price = coinItem.price,
                            change = coinItem.change,
-                           formattedPrice = coinItem.price.toString(),
-                           formattedChange = coinItem.change.toString(),
+                           formattedPrice = formatFiat(coinItem.price),
+                           formattedChange = formatPercentage(coinItem.change),
                            isPositive = coinItem.change>0
                        )
                    }
