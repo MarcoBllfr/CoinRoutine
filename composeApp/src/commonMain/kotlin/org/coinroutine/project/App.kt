@@ -7,6 +7,6 @@ import org.coinroutine.project.theme.CoinRoutineTheme
 @Composable
 fun App() {
     CoinRoutineTheme{
-
+        CoinsListScreen {  }
     }
 }
