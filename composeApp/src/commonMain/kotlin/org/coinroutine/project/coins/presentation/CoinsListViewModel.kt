@@ -2,6 +2,7 @@ package org.coinroutine.project.coins.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coinroutine.composeapp.generated.resources.Res
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -11,6 +12,7 @@ import org.coinroutine.project.coins.domain.GetCoinsListUseCase
 import org.coinroutine.project.core.domain.Result
 import org.coinroutine.project.core.util.formatFiat
 import org.coinroutine.project.core.util.formatPercentage
+import org.coinroutine.project.core.util.toUiText
 
 class CoinsListViewModel(
     private val getCoinsListUseCase: GetCoinsListUseCase
@@ -48,7 +50,7 @@ class CoinsListViewModel(
                 _state.update {
                     it.copy(
                         coins = emptyList(),
-                        error = null, //TODO coinsResponse.error.toString() format or .toUiText(),
+                        error = coinsResponse.error.toUiText()
                     )
                 }
             }
