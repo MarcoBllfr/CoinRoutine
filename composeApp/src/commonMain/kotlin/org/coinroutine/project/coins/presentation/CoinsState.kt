@@ -16,3 +16,4 @@ data class UiChartState(
     val isLoading: Boolean = false,
     val coinName: String = ""
 )
+

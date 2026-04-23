@@ -18,7 +18,7 @@ import org.coinroutine.project.core.util.toUiText
 
 class CoinsListViewModel(
     private val getCoinsListUseCase: GetCoinsListUseCase,
-    private val getCoinsPriceHistoryUseCase: GetCoinPriceHistoryUseCase
+    private val getCoinPriceHistoryUseCase: GetCoinPriceHistoryUseCase
 ): ViewModel() {
     private val _state= MutableStateFlow(CoinsState())
     val state= _state
@@ -59,7 +59,7 @@ class CoinsListViewModel(
             }
         }
     }
-    fun onCoinLongPressed(coinId: String){
+    fun onCoinLongPressed(coinId: String) {
         _state.update {
             it.copy(
                 chartState = UiChartState(
@@ -68,23 +68,23 @@ class CoinsListViewModel(
                 )
             )
         }
+
         viewModelScope.launch {
-            when(val priceHistory = getCoinsPriceHistoryUseCase.execute(coinId)) {
+            when(val priceHistory = getCoinPriceHistoryUseCase.execute(coinId)) {
                 is Result.Success -> {
-                    _state.update {
-                        currentState -> currentState.copy(
+                    _state.update { currentState ->
+                        currentState.copy(
                             chartState = UiChartState(
                                 sparkLine = priceHistory.data.sortedBy { it.timestamp }.map { it.price },
                                 isLoading = false,
-                                coinName = _state.value.coins.find { it.id == coinId }?.name.orEmpty()
+                                coinName = _state.value.coins.find { it.id == coinId }?.name.orEmpty(),
                             )
                         )
-
                     }
                 }
-                is Result.Error ->{
-                    _state.update {
-                        currentState -> currentState.copy(
+                is Result.Error -> {
+                    _state.update { currentState ->
+                        currentState.copy(
                             chartState = UiChartState(
                                 sparkLine = emptyList(),
                                 isLoading = false,
@@ -94,6 +94,13 @@ class CoinsListViewModel(
                     }
                 }
             }
+        }
+    }
+
+
+    fun onDismissChart() {
+        _state.update {
+            it.copy(chartState = null)
         }
     }
 }

@@ -3,6 +3,7 @@ package org.coinroutine.project.di
 import io.ktor.client.HttpClient
 import org.coinroutine.project.coins.data.remote.impl.KtorCoinsRemoteDataSource
 import org.coinroutine.project.coins.domain.GetCoinDetailsUseCase
+import org.coinroutine.project.coins.domain.GetCoinPriceHistoryUseCase
 import org.coinroutine.project.coins.domain.GetCoinsListUseCase
 import org.coinroutine.project.coins.domain.api.CoinsRemoteDataSource
 import org.coinroutine.project.coins.presentation.CoinsListViewModel
@@ -32,8 +33,9 @@ val sharedModule = module {
     single<HttpClient>{ HttpClientFactory.create(get()) }
 
     //coins list
-    viewModel { CoinsListViewModel(get()) }
+    viewModel { CoinsListViewModel(get(), get()) }
     singleOf(::GetCoinsListUseCase)
     singleOf(::KtorCoinsRemoteDataSource).bind<CoinsRemoteDataSource>()
     singleOf(::GetCoinDetailsUseCase)
+    singleOf(::GetCoinPriceHistoryUseCase)
 }
