@@ -1,11 +1,17 @@
 package org.coinroutine.project.core.database.portfolio
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import org.coinroutine.project.portfolio.data.local.PortfolioCoinEntity
 import org.coinroutine.project.portfolio.data.local.PortfolioDao
+import org.coinroutine.project.portfolio.data.local.UserBalanceDao
+import org.coinroutine.project.portfolio.data.local.UserBalanceEntity
 
-@Database(entities = [PortfolioCoinEntity::class], version = 1)
+@Database(entities = [PortfolioCoinEntity::class, UserBalanceEntity::class], version = 2)
+@ConstructedBy(PortfolioDatabaseCreator::class)
 abstract class PortfolioDatabase : RoomDatabase(){
     abstract fun portfolioDao(): PortfolioDao
+    abstract fun userBalanceDao(): UserBalanceDao
+
 }

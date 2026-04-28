@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 
+
 expect object PortfolioDatabaseCreator: RoomDatabaseConstructor<PortfolioDatabase>
 
 fun getPortfolioDatabase(
