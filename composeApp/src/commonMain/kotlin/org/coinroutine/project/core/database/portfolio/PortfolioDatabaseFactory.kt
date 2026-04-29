@@ -8,12 +8,16 @@ import kotlinx.coroutines.IO
 
 
 
-expect object PortfolioDatabaseCreator: RoomDatabaseConstructor<PortfolioDatabase>
+
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object PortfolioDatabaseCreator : RoomDatabaseConstructor<PortfolioDatabase>
 
 fun getPortfolioDatabase(
     builder: RoomDatabase.Builder<PortfolioDatabase>
-): PortfolioDatabase{
+): PortfolioDatabase {
     return builder
+        //.addMigrations(MIGRATIONS)
+        //.fallbackToDestructiveMigrationOnDowngrade()
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

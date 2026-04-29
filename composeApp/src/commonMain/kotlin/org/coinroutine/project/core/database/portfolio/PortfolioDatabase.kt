@@ -9,7 +9,6 @@ import org.coinroutine.project.portfolio.data.local.UserBalanceDao
 import org.coinroutine.project.portfolio.data.local.UserBalanceEntity
 
 @Database(entities = [PortfolioCoinEntity::class, UserBalanceEntity::class], version = 2)
-@ConstructedBy(PortfolioDatabaseCreator::class)
 abstract class PortfolioDatabase : RoomDatabase(){
     abstract fun portfolioDao(): PortfolioDao
     abstract fun userBalanceDao(): UserBalanceDao
