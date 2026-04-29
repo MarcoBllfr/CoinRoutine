@@ -11,6 +11,8 @@ import org.coinroutine.project.coins.presentation.CoinsListViewModel
 import org.coinroutine.project.core.database.portfolio.PortfolioDatabase
 import org.coinroutine.project.core.database.portfolio.getPortfolioDatabase
 import org.coinroutine.project.core.network.HttpClientFactory
+import org.coinroutine.project.portfolio.data.PortfolioRepositoryImpl
+import org.coinroutine.project.portfolio.domain.PortfolioRepository
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -46,4 +48,5 @@ val sharedModule = module {
     single {
         getPortfolioDatabase(get<RoomDatabase.Builder<PortfolioDatabase>>())
     }
+    singleOf(::PortfolioRepositoryImpl).bind<PortfolioRepository>()
 }
