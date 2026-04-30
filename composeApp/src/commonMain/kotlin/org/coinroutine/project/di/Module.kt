@@ -15,6 +15,7 @@ import org.coinroutine.project.portfolio.data.PortfolioRepositoryImpl
 import org.coinroutine.project.portfolio.domain.PortfolioRepository
 import org.coinroutine.project.portfolio.presentation.PortfolioViewModel
 import org.coinroutine.project.trade.domain.BuyCoinUseCase
+import org.coinroutine.project.trade.domain.SellCoinUseCase
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -57,4 +58,5 @@ val sharedModule = module {
 
     //trade
     singleOf(::BuyCoinUseCase)
+    singleOf(::SellCoinUseCase)
 }
