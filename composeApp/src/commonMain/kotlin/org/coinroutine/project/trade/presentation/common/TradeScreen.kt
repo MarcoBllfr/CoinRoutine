@@ -9,24 +9,39 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.datetime.Month
 import org.coinroutine.project.theme.LocalCoinRoutineColorsPalette
+import org.coinroutine.project.trade.presentation.common.component.rememberCurrencyVisualTransformation
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -123,6 +138,50 @@ fun TradeScreen(
         }
     }
 
+}
+@Composable
+fun CenteredDollarTextField(
+    modifier: Modifier = Modifier,
+    amountText: String,
+    onAmountChange: (String) -> Unit
+){
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit){
+        focusRequester.requestFocus()
+    }
+    val currencyVisualTransformation = rememberCurrencyVisualTransformation()
+    val displayText= amountText.trimStart('$')
+    BasicTextField(
+        value = displayText,
+        onValueChange = {
+            newValue -> val trimmed = newValue.trimStart('0').trim{it.isDigit().not()}
+            //trimmed at 10k only for testing and educational purpose
+            if(trimmed.isEmpty() || trimmed.toInt() < 10000){
+                    onAmountChange(trimmed)
+            }
+        },
+        modifier=modifier.focusRequester(focusRequester)
+            .padding(16.dp),
+        textStyle = TextStyle(
+            color= MaterialTheme.colorScheme.onBackground,
+            fontSize=24.sp,
+            textAlign = TextAlign.Center
+        ),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
+        decorationBox = {
+            innerTextField -> Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.height(56.dp).wrapContentWidth()
+            ){
+                innerTextField()
+        }
+        },
+        cursorBrush = SolidColor(Color.White),
+        visualTransformation = currencyVisualTransformation,
+
+    )
 }
 
 enum class TradeType{
