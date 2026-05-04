@@ -6,20 +6,19 @@ class CurrencyOffsetMapping(originalText: String, formattedText: String): Offset
     private val originalLength = originalText.length
     private val indexes = findDigitIndexes(originalText, formattedText)
 
-    private fun findDigitIndexes(firstString: String, secondString:  String): List<Int> {
-        val digitIndexes=mutableListOf<Int>()
-        val currentIndex = 0
-        for (digit in firstString){
-            val index =  secondString.indexOf(digit,currentIndex)
-            if(index != -1){
+    private fun findDigitIndexes(firstString: String, secondString: String): List<Int> {
+        val digitIndexes = mutableListOf<Int>()
+        var currentIndex = 0
+        for (digit in firstString) {
+            val index = secondString.indexOf(digit, currentIndex)
+            if (index != -1) {
                 digitIndexes.add(index)
                 currentIndex = index + 1
-            }else{
+            } else {
                 return emptyList()
             }
         }
         return digitIndexes
-
     }
 
     override fun originalToTransformed(offset: Int): Int {
