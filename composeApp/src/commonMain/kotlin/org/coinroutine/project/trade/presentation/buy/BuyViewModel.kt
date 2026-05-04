@@ -23,10 +23,10 @@ import org.coinroutine.project.trade.presentation.common.UiTradeCoinItem
 class BuyViewModel(
     private val getCoinDetailsUseCase: GetCoinDetailsUseCase,
     private val portfolioRepository: PortfolioRepository,
-    private val buyCoinUseCase: BuyCoinUseCase
+    private val buyCoinUseCase: BuyCoinUseCase,
+    private val coinId: String,
 ): ViewModel() {
 
-    private val tempCoinId = "1" //remove this later and replace by parameter
     private val _amount = MutableStateFlow("")
     private val _state = MutableStateFlow(TradeState())
     val state = combine(
@@ -45,7 +45,7 @@ class BuyViewModel(
          initialValue = TradeState(isLoading = true)
      )
     private suspend fun getCoinDetails(balance: Double){
-        when(val coinResponse= getCoinDetailsUseCase.execute(tempCoinId)){
+        when(val coinResponse= getCoinDetailsUseCase.execute(coinId)){
             is Result.Success ->{
                 _state.update {
                     it.copy(

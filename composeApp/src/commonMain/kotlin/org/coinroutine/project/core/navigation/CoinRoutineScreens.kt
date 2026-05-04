@@ -7,6 +7,6 @@ object Portfolio
 @Serializable
 object Coins
 @Serializable
-object Buy
+data class Buy(val coinId: String)
 @Serializable
-object Sell
+data class Sell(val coinId: String)
