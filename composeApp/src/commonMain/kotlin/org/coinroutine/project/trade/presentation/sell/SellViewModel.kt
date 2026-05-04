@@ -2,10 +2,12 @@ package org.coinroutine.project.trade.presentation.sell
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,6 +18,7 @@ import org.coinroutine.project.core.util.toUiText
 import org.coinroutine.project.portfolio.domain.PortfolioRepository
 import org.coinroutine.project.trade.domain.SellCoinUseCase
 import org.coinroutine.project.trade.mapper.toCoin
+import org.coinroutine.project.trade.presentation.buy.BuyEvents
 import org.coinroutine.project.trade.presentation.common.TradeState
 import org.coinroutine.project.trade.presentation.common.UiTradeCoinItem
 
@@ -60,6 +63,9 @@ class SellViewModel(
         started= SharingStarted.WhileSubscribed(),
         initialValue = TradeState(isLoading = true)
     )
+    private val _events = Channel<SellEvents>(capacity = Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
+
     fun onAmountChanged(amount: String){
         _amount.value= amount
     }
@@ -100,7 +106,7 @@ class SellViewModel(
             )
             when(sellCoinResponse){
                 is Result.Success -> {
-                    //add event
+                    _events.send(SellEvents.SellSuccess)
 
                 }
                 is Result.Error -> {
@@ -114,4 +120,7 @@ class SellViewModel(
             }
         }
     }
+}
+sealed interface SellEvents{
+    data object SellSuccess:SellEvents
 }

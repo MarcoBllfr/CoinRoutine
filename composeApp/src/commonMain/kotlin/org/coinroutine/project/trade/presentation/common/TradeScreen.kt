@@ -47,16 +47,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TradeScreen(
     state: TradeState,
-    tradeType:TradeType,
-    onAmountChange:(String) -> Unit,
-    onSubmitClicked:() -> Unit,
-){
+    tradeType: TradeType,
+    onAmountChange: (String) -> Unit,
+    onSubmitClicked: () -> Unit,
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-    ){
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -65,12 +65,12 @@ fun TradeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.background,
-                    shape = RoundedCornerShape(32.dp)
-                )
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(32.dp)
+                    )
                     .padding(horizontal = 16.dp, vertical = 4.dp)
-            ){
+            ) {
                 AsyncImage(
                     model = state.coin?.iconUrl,
                     contentDescription = null,
@@ -79,114 +79,113 @@ fun TradeScreen(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = state.coin?.name ?:"",
+                    text = state.coin?.name ?: "",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(4.dp)
                 )
-                Spacer(modifier = Modifier.width(24.dp))
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = when (tradeType) {
+                    TradeType.BUY -> "Buy Amount"
+                    TradeType.SELL -> "Sell Amount"
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            CenteredDollarTextField(
+                amountText = state.amount,
+                onAmountChange = onAmountChange
+            )
+            Text(
+                text = state.availableAmount,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(4.dp)
+            )
+            if (state.error != null) {
                 Text(
-                    text = when(tradeType){
-                        TradeType.BUY -> "Buy Amount"
-                        TradeType.SELL -> "Sell Amount"
-                    },
-                    style= MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                CenteredDollarTextField(
-                    amountText = state.amount,
-                    onAmountChange = onAmountChange
-                )
-                Text(
-                    text = state.availableAmount,
+                    text = stringResource(state.error),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = LocalCoinRoutineColorsPalette.current.lossRed,
                     modifier = Modifier.padding(4.dp)
                 )
-                if(state.error != null){
-                    Text(
-                        text = stringResource(state.error),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = LocalCoinRoutineColorsPalette.current.lossRed,
-                        modifier = Modifier.padding(4.dp)
-                    )
-                }
-
             }
-
         }
         Button(
             onClick = onSubmitClicked,
             colors = ButtonDefaults.buttonColors(
-                containerColor = when(tradeType){
+                containerColor = when (tradeType) {
                     TradeType.BUY -> LocalCoinRoutineColorsPalette.current.profitGreen
                     TradeType.SELL -> LocalCoinRoutineColorsPalette.current.lossRed
                 }
             ),
             contentPadding = PaddingValues(horizontal = 64.dp),
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp)
-        ){
+        ) {
             Text(
-                text = when(tradeType){
+                text = when (tradeType) {
                     TradeType.BUY -> "Buy Now"
                     TradeType.SELL -> "Sell Now"
                 },
                 style = MaterialTheme.typography.bodyLarge,
-                color = when(tradeType){
+                color = when (tradeType) {
                     TradeType.BUY -> MaterialTheme.colorScheme.onPrimary
                     TradeType.SELL -> MaterialTheme.colorScheme.onBackground
                 }
             )
-
         }
     }
-
 }
+
 @Composable
 fun CenteredDollarTextField(
     modifier: Modifier = Modifier,
     amountText: String,
     onAmountChange: (String) -> Unit
-){
+) {
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
+
     val currencyVisualTransformation = rememberCurrencyVisualTransformation()
-    val displayText= amountText.trimStart('$')
+
+    val displayText = amountText.trimStart('$')
+
     BasicTextField(
         value = displayText,
-        onValueChange = {
-            newValue -> val trimmed = newValue.trimStart('0').trim{it.isDigit().not()}
-            //trimmed at 10k only for testing and educational purpose
-            if(trimmed.isEmpty() || trimmed.toInt() < 10000){
-                    onAmountChange(trimmed)
+        onValueChange = { newValue ->
+            val trimmed = newValue.trimStart('0').trim { it.isDigit().not() }
+            if (trimmed.isEmpty() || trimmed.toInt() <= 10000) {
+                onAmountChange(trimmed)
             }
         },
-        modifier=modifier.focusRequester(focusRequester)
+        modifier = modifier
+            .focusRequester(focusRequester)
             .padding(16.dp),
         textStyle = TextStyle(
-            color= MaterialTheme.colorScheme.onBackground,
-            fontSize=24.sp,
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 24.sp,
             textAlign = TextAlign.Center
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number
         ),
-        decorationBox = {
-            innerTextField -> Box(
+        decorationBox = { innerTextField ->
+            Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.height(56.dp).wrapContentWidth()
-            ){
+            ) {
                 innerTextField()
-        }
+            }
         },
         cursorBrush = SolidColor(Color.White),
         visualTransformation = currencyVisualTransformation,
-
     )
 }
 
 enum class TradeType{
-    BUY,SELL
+    BUY, SELL
 }
