@@ -40,7 +40,7 @@ import org.coinroutine.project.theme.LocalCoinRoutineColorsPalette
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-private fun CoinsListScreen(
+fun CoinsListScreen(
     onCoinClicked: (String) -> Unit,
 ) {
     val coinsListViewModel = koinViewModel<CoinsListViewModel>()
